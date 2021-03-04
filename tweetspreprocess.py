@@ -6,17 +6,23 @@ import pandas as pd
 #komentarze
 
 def preprocess_dataframe(_dataframe):
-    removed_counter = 0
-
     _dataframe = remove_columns(_dataframe)
 
     times = []
     for idx, row in _dataframe.iterrows():
+
+        if not ptxt.isEnglish(row['tweet']):
+            _dataframe = _dataframe.drop(idx)
+            continue
+
         date_and_time_arr = row['date'].split(' ')
         row['date'] = date_and_time_arr[0]
         times.append(date_and_time_arr[1])
+
+        
+        row['tweet'] = ptxt.processText(row['tweet'])
     
-    _dataframe = _dataframe.insert(1, "time", times, True)
+    _dataframe.insert(1, "time", times, True)
     return _dataframe
 
 

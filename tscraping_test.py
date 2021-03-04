@@ -18,7 +18,9 @@ for i in range(-1, 0):
     df = run_scrape(config)
 
     df = preprocess_dataframe(df)
-    print(df.head())
+    
+    for idx, row in df.iterrows():
+        print(row['tweet'])
 
 
 finish = datetime.datetime.now()
