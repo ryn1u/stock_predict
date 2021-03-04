@@ -1,0 +1,14 @@
+combining multiple tweets into large batches
+-can't use metadate per tweet
+
+sentiment from singular tweet
+-input is: likes, retweets, text, price at the time of tweet
+-output price next day or price in 24h
+-each sample is tweet from given time and price form time_1day
+-nie wiadomo czy siec działałaby uniwersalnie dla wszystkich akcji
+
+scrpaer w ciagu 3 dni znalazl tylko 1200 tweetow posiadajacych >100 lajkow
+-nalezaloby opracowac system automatycznego doboru ilosci limitow i lajkow
+
+encoder-decoder, seq to seq
+-input: tweety z przedziału godzinnego
