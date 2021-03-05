@@ -25,11 +25,14 @@ def deEmojify(text):
 def removeURLs(text):
     return re.sub(r"http\S+", "", text)
 
+def removeAts(text):
+    return re.sub(r"@\S+", "", text)
+
 def removeWhitespace(text):
     return re.sub(' +', ' ', text)
 
 def leaveLettersAndNumbers(text):
-    return re.sub('[\W_]+', '', text)
+    return re.sub('[\W_]+', ' ', text)
 
 def processText(text):
-    return removeURLs(removeWhitespace(leaveLettersAndNumbers(deEmojify(text))))
+    return leaveLettersAndNumbers(removeWhitespace(removeAts(removeURLs(deEmojify(text)))))

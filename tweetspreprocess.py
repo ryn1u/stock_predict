@@ -1,33 +1,51 @@
 import csv, os
 import processtext as ptxt
 import pandas as pd
+from datetime import datetime
 
 #TO-DO:
 #komentarze
 
 def preprocess_dataframe(_dataframe):
-    _dataframe = remove_columns(_dataframe)
 
-    times = []
+    times = dict()
+    texts = dict()
+    dates = dict()
+
+    counter = 0
+
     for idx, row in _dataframe.iterrows():
 
         if not ptxt.isEnglish(row['tweet']):
             _dataframe = _dataframe.drop(idx)
+            counter += 1
             continue
 
         date_and_time_arr = row['date'].split(' ')
-        row['date'] = date_and_time_arr[0]
-        times.append(date_and_time_arr[1])
 
-        
-        row['tweet'] = ptxt.processText(row['tweet'])
+        dates[idx] = date_and_time_arr[0]
+        times[idx] = date_and_time_arr[1]
+        texts[idx] = ptxt.processText(row['tweet'])
+        print(f"{dates[idx]} at {times[idx]}: {texts[idx]}")
     
-    _dataframe.insert(1, "time", times, True)
+    print(f"\nRemoved {counter} non english entries.\n\n")
+
+    _dataframe = remove_columns(_dataframe)
+    _dataframe.insert(0, "date", dates.values(), True)
+    _dataframe.insert(1, "time", times.values(), True)
+    _dataframe['text'] = texts.values()
+
     return _dataframe
+
+def save_dataframe(_dataframe, ticker):
+    finish = datetime.now()
+    time = finish.time().strftime("%H-%M-%S")
+    name  = f"data/{ticker}_{finish.date()}_{time}.h5"
+    _dataframe.to_hdf(name, key=ticker, mode='w')
 
 
 def remove_columns(_dataframe):
-    keep_columns = ["tweet", "date", "nlikes", "nreplies", "nretweets"]
+    keep_columns = ["nlikes", "nreplies", "nretweets"]
     for col in _dataframe.columns:
         if not col in keep_columns:
             _dataframe = _dataframe.drop(columns=col)
